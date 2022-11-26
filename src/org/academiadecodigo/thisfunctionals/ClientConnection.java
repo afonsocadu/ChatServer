@@ -13,6 +13,8 @@ public class ClientConnection implements Runnable{
     private BufferedReader in;
     private String userName;
 
+    private boolean isConnected = true;
+
     public ClientConnection(Socket clientSocket, ChatServer chatServer) throws IOException {
         this.clientSocket = clientSocket;
         this.chatServer = chatServer;
@@ -38,7 +40,7 @@ public class ClientConnection implements Runnable{
             e.printStackTrace();
         }
 
-        while (true) {
+        while (isConnected) {
             try {
                 String message = in.readLine();
 
@@ -54,6 +56,7 @@ public class ClientConnection implements Runnable{
                     System.out.println("The client "+getUserName() +" disconnected");
                     clientSocket.close();
                     chatServer.remove(this);
+                    isConnected = false;
 
                 }
             } catch (IOException e) {
